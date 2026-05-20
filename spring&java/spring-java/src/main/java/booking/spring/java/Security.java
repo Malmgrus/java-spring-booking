@@ -44,7 +44,7 @@ public class Security {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(HttpMethod.POST, "/login").permitAll()
             .requestMatchers("/bookings").hasRole("ADMIN")
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
         )
         .httpBasic(Customizer.withDefaults());
 
