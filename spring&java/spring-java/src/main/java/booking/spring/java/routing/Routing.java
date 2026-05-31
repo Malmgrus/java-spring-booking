@@ -2,10 +2,12 @@ package booking.spring.java.routing;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
 import jakarta.validation.Valid;
 
@@ -16,10 +18,12 @@ import java.util.List;
 public class Routing {
     private RoomRepository roomRepository;
     private BookingRepository bookingRepository;
+    private Calculation calculation;
 
-    public Routing(RoomRepository roomRepository, BookingRepository bookingRepository) {
+    public Routing(RoomRepository roomRepository, BookingRepository bookingRepository, Calculation calculation) {
         this.roomRepository = roomRepository;
         this.bookingRepository = bookingRepository;
+        this.calculation = calculation;
     }
 
     @GetMapping("/rooms")
@@ -28,24 +32,30 @@ public class Routing {
     }
 
     @PostMapping("/createBooking")
-    public Booking createBooking(@Valid @RequestBody Booking booking) {
-        System.out.println("booking: " + booking);
-        return bookingRepository.save(booking);
+    public ResponseEntity<String> createBooking(@Valid @RequestBody Booking booking) {
+
+        calculation.updateRoomOccupancy(booking);
+
+        calculation.calculateTotalPrice(booking);
+
+        return ResponseEntity.ok("Bokning skapad. Totala priset är: " + booking.getTotalPrice());
     }
 
     @GetMapping("/bookings")
-    @PreAuthorize("hasRole('admin')")
-    public String getBookings() {  // Endast admin
-        return "List of bookings";
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Booking> getBookings() {  // Endast admin
+        return bookingRepository.findAll();
     }
 
     @PutMapping("/updateBooking/{id}")
-    public void updateBooking() {
-
+    public ResponseEntity<String> updateBooking(@PathVariable long id, @RequestBody Booking booking) {
+        calculation.updateBooking(id, booking);
+        return ResponseEntity.ok("Bokning uppdaterad.");
     }
 
     @DeleteMapping("/deleteBooking/{id}")
-    public void deleteBooking() {
-        
+    public ResponseEntity<String> deleteBooking(@PathVariable long id) {
+        calculation.removeBooking(id);
+        return ResponseEntity.ok("Bokning borttagen.");
     }
 }

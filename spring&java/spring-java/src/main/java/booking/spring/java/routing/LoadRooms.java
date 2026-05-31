@@ -11,12 +11,12 @@ public class LoadRooms {
     CommandLineRunner loadData(RoomRepository roomRepository) {
         return args -> {
 
-            roomRepository.save(new Room("Enkelrum", 800));
-            roomRepository.save(new Room("Enkelrum", 800));
-            roomRepository.save(new Room("Enkelrum", 800));
-            roomRepository.save(new Room("Dubbelrum", 1200));
-            roomRepository.save(new Room("Dubbelrum", 1200));
-            roomRepository.save(new Room("Svit", 2000));
+            roomRepository.save(new Room("Enkelrum", 800, false));
+            roomRepository.save(new Room("Enkelrum", 800, false));
+            roomRepository.save(new Room("Enkelrum", 800, false));
+            roomRepository.save(new Room("Dubbelrum", 1200, false));
+            roomRepository.save(new Room("Dubbelrum", 1200, false));
+            roomRepository.save(new Room("Svit", 2000, false));
 
         };
     }
