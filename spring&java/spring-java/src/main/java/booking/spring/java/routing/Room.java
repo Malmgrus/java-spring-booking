@@ -2,8 +2,6 @@ package booking.spring.java.routing;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,7 +29,6 @@ public class Room {
     private boolean occupied;
 
     @OneToMany(mappedBy = "room")
-    @JsonIgnore
     private List<Booking> bookings;
 
     public Room() {}

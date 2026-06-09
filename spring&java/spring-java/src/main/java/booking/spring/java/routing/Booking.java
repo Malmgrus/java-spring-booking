@@ -31,7 +31,7 @@ public class Booking {
     private int numberOfGuests;
 
     @ManyToOne
-    @JoinColumn(name = "roomId")
+    @JoinColumn(name = "roomId", nullable = false)
     private Room room;
 
     private double totalPrice;

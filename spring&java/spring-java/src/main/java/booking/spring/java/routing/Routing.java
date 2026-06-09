@@ -2,10 +2,10 @@ package booking.spring.java.routing;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 
@@ -43,19 +43,20 @@ public class Routing {
 
     @GetMapping("/bookings")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Booking> getBookings() {  // Endast admin
+    public List<Booking> getBookings() {  // Only admin
         return bookingRepository.findAll();
     }
 
-    @PutMapping("/updateBooking/{id}")
-    public ResponseEntity<String> updateBooking(@PathVariable long id, @RequestBody Booking booking) {
+    @PutMapping("/updateBooking")
+    public ResponseEntity<String> updateBooking(@RequestParam long id,@Valid @RequestBody Booking booking) {
         calculation.updateBooking(id, booking);
-        return ResponseEntity.ok("Bokning uppdaterad.");
+        return ResponseEntity.ok("Bokning uppdaterad för " + booking.getGuestName());
     }
 
-    @DeleteMapping("/deleteBooking/{id}")
-    public ResponseEntity<String> deleteBooking(@PathVariable long id) {
+    @DeleteMapping("/deleteBooking")
+    public ResponseEntity<String> deleteBooking(@RequestParam long id) {
+        Booking booking = bookingRepository.findById(id).orElse(null);
         calculation.removeBooking(id);
-        return ResponseEntity.ok("Bokning borttagen.");
+        return ResponseEntity.ok(booking.getGuestName() + "s bokning är nu borttagen.");
     }
 }

@@ -1,7 +1,5 @@
 package booking.spring.java.routing;
 
-
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -56,16 +54,14 @@ public class Calculation {
                 room.setOccupied(true);
                 roomRepository.save(room);
                 booking.setRoom(room);
-                System.out.println("Rummet är nu upptaget: " + room.getType() + " med ID: " + room.getId());
                 return ResponseEntity.ok("Rummet är nu upptaget.");
             }
         }
 
-        throw new IllegalArgumentException("Kan inte uppdatera upptäthet");
+        throw new IllegalArgumentException("Kan inte uppdatera rummets status.");
     }
 
     public void updateBooking(long id, Booking booking) {
-        System.out.println("id: " + id);
         Booking existingBooking = bookingRepository.findById(id).orElse(null);
         if (existingBooking != null) {
             existingBooking.setGuestName(booking.getGuestName());
