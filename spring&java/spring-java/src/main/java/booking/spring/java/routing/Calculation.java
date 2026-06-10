@@ -47,6 +47,13 @@ public class Calculation {
 
     public ResponseEntity<String> updateRoomOccupancy(Booking booking) {
 
+        Room oldRoom = booking.getRoom();
+
+        if (oldRoom != null) {
+            oldRoom.setOccupied(false);
+            roomRepository.save(oldRoom);
+        }
+
         List<Room> allRooms = roomRepository.findAll();
 
         for (Room room : allRooms) {
@@ -76,6 +83,7 @@ public class Calculation {
             existingBooking.setNumberOfGuests(booking.getNumberOfGuests());
             calculateTotalPrice(existingBooking);
             updateRoomOccupancy(existingBooking);
+
             bookingRepository.save(existingBooking);
         } else {
             throw new IllegalArgumentException("Bokning hittades inte.");
