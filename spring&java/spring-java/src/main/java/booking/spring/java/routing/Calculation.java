@@ -75,6 +75,7 @@ public class Calculation {
             existingBooking.setRoomType(booking.getRoomType());
             existingBooking.setNumberOfGuests(booking.getNumberOfGuests());
             calculateTotalPrice(existingBooking);
+            updateRoomOccupancy(existingBooking);
             bookingRepository.save(existingBooking);
         } else {
             throw new IllegalArgumentException("Bokning hittades inte.");
